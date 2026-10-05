@@ -1,0 +1,7 @@
+# Material do autor (licença de avaliação: NÃO redistribuir) — fica só local
+_fonte/
+*.zip
+*.wav
+*.mp4
+crunchlog-*/
+__pycache__/

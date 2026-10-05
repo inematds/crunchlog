@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# crunchlog-linux: o que falta ao CrunchLog 2.0.0a1 no Linux (gravar e demo), por cima do CrunchLog instalado.
+#   crunchlog-linux demo                 reunião inventada falada pelo Piper -> nota
+#   crunchlog-linux start [--slug X]     começa a gravar (monitor da saída + microfone)
+#   crunchlog-linux stop                 para, processa e imprime note: <caminho>
+#   crunchlog-linux toggle               start/stop num comando só (para atalho de teclado)
+#   crunchlog-linux status | devices
+# Todo o resto é o próprio `crunchlog` (process, dashboard, mcp, ask, export, prep...).
+set -euo pipefail
+here="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+py="$(uv tool dir)/crunchlog/bin/python"
+[ -x "$py" ] || { echo "error: CrunchLog não instalado (uv tool install --python 3.12 \".[mcp]\" na pasta do zip)" >&2; exit 1; }
+cmd="${1:-}"; shift || true
+case "$cmd" in
+  demo) exec "$py" "$here/demo_linux.py" "$@" ;;
+  start|stop|toggle|status|devices) exec "$py" "$here/recorder_linux.py" "$cmd" "$@" ;;
+  *) sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
+esac
