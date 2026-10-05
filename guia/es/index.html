@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CrunchLog — notas de reunión 100% locales</title>
+<meta name="description" content="Guía completa de CrunchLog: graba reuniones en dos pistas, transcribe en local y genera notas en Markdown con cada intervención por persona. Windows, macOS y Linux.">
+<link rel="alternate" hreflang="pt-BR" href="https://inematds.github.io/crunchlog/guia/">
+<link rel="alternate" hreflang="en" href="https://inematds.github.io/crunchlog/guia/en/">
+<link rel="alternate" hreflang="es" href="https://inematds.github.io/crunchlog/guia/es/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
+    --txt:#e9e9ee; --mut:#9a9aa6; --amb:#E2A23B; --amb2:#f0c070; --sky:#38bdf8; --pro:#cbd5e1;
+    color-scheme:dark;
+  }
+  body.light{
+    --bg:#f6f7f9; --bg2:#eceef2; --card:#ffffff; --line:#e1e3ea;
+    --txt:#1a1a22; --mut:#5b5b68; --amb:#b9791d; --amb2:#a16207; --sky:#0369a1; --pro:#b45309;
+    color-scheme:light;
+  }
+  body.light .hero .glow{opacity:.5}
+  body.light pre{background:#0e0e14;color:#d6d6e0}
+  body.light pre .c{color:#8a8a98}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15;margin:0}
+  a{color:var(--amb);text-decoration:none}
+  code,pre{font-family:"JetBrains Mono",monospace}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+  .mut{color:var(--mut)} .amb{color:var(--amb)}
+  .chip{display:inline-block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amb);font-weight:600;font-family:Sora}
+  nav{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);background:rgba(12,12,16,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+  nav .brand{display:flex;align-items:center;gap:8px;font-family:Sora;font-weight:800;letter-spacing:-.02em;color:var(--amb)}
+  nav .brand .emoji{font-size:1.25rem}
+  nav .sep{color:var(--mut);opacity:.45}
+  nav .inema{color:var(--sky);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .inema:hover{filter:brightness(1.15)}
+  nav .pro{color:var(--pro);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .pro:hover{filter:brightness(1.15)}
+  nav .clubpro{display:inline-flex;align-items:center;gap:6px}
+  nav .links{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+  nav .links a.sec{color:var(--mut)} nav .links a.sec:hover{color:var(--txt)}
+  .lang{display:inline-flex;gap:2px;font-family:Sora;font-size:.78rem}
+  .lang a{color:var(--mut);padding:.2em .45em;border-radius:6px} .lang a.on{color:var(--amb);background:rgba(226,162,59,.12)}
+  .tgl{background:var(--bg2);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .tgl:hover{border-color:var(--amb)}
+  .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  @media(max-width:760px){nav .links a.sec{display:none}}
+  @media(max-width:520px){nav .wrap{gap:8px;padding:8px 14px;height:auto;flex-wrap:wrap} nav .links{gap:8px;margin-left:0;width:100%;justify-content:space-between} nav .btn{padding:.45em .7em;font-size:.82rem} .tgl{width:34px;height:34px}}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(226,162,59,.22),transparent 70%);pointer-events:none}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.025em}
+  .hero p.lead{font-size:1.18rem;color:var(--mut);margin:1.1em 0 1.6em;max-width:34ch}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000}
+  .hero figure img{width:100%;display:block}
+  @media(max-width:780px){.hero .wrap{grid-template-columns:1fr;padding:48px 22px}}
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em}
+  section .sub{color:var(--mut);margin:.6em 0 2em;max-width:62ch}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:540px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:.4em}
+  .card p{color:var(--mut);font-size:.92rem;margin:0}
+  .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:8px;background:rgba(226,162,59,.14);color:var(--amb);font-family:Sora;font-weight:800;font-size:.9rem;margin-bottom:.7em}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .flow span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:.45em .9em;font-size:.85rem;font-family:Sora;font-weight:600}
+  .flow .arr{color:var(--amb);border:none;background:none;padding:0 .1em}
+  pre{background:#0a0a0e;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;font-size:.86rem;line-height:1.6;color:#d6d6e0}
+  pre .c{color:#6f6f7c} pre .k{color:var(--amb2)} pre .s{color:#9ece6a}
+  .step{display:grid;grid-template-columns:46px minmax(0,1fr);gap:16px;margin-bottom:26px}
+  .step>div,.card{min-width:0}
+  p code,li code,td code{overflow-wrap:anywhere}
+  .step .b{width:46px;height:46px;border-radius:12px;background:var(--amb);color:#1a1206;font-family:Sora;font-weight:800;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:1.12rem;margin-bottom:.3em}
+  .step p{color:var(--mut);margin:.2em 0 .7em}
+  .ex{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:680px){.ex{grid-template-columns:1fr}}
+  .ex figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .ex figure img{width:100%;display:block}
+  .ex figcaption{padding:12px 14px;font-size:.88rem;color:var(--mut);background:var(--card)}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border:none}
+  .phase .tag{flex:0 0 92px;font-family:Sora;font-weight:800;color:var(--amb)}
+  .phase .d strong{display:block;margin-bottom:.2em}
+  .phase .d span{color:var(--mut);font-size:.92rem}
+  footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><span class="emoji">🎙️</span> CrunchLog</a>
+  <span class="sep">|</span>
+  <span class="clubpro">
+    <a class="inema" href="https://inema.club" target="_blank" rel="noopener">INEMA.CLUB</a>
+    <span class="sep">-</span>
+    <a class="pro" href="https://inema.pro" target="_blank" rel="noopener">PRO</a>
+  </span>
+  <div class="links">
+    <a class="sec" href="#oque">Qué es</a>
+    <a class="sec" href="#fluxo">Cómo funciona</a>
+    <a class="sec" href="#guia">Guía de uso</a>
+    <a class="sec" href="#linux">Linux</a>
+    <a class="sec" href="#exemplos">Pantallas</a>
+    <span class="lang"><a href="../">PT</a><a href="../en/">EN</a><a class="on" href="./">ES</a></span>
+    <button class="tgl" id="themeToggle" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+    <a class="btn" href="https://github.com/inematds/crunchlog" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div>
+      <span class="chip">Notas de reunión 100% locales · Windows, macOS y Linux</span>
+      <h1>Tu reunión se convierte en nota <span class="amb">sin salir de tu equipo</span></h1>
+      <p class="lead">CrunchLog graba la llamada en dos pistas (lo que oyes y lo que dices), transcribe en tu CPU y entrega una nota en Markdown con cada intervención marcada por persona. Sin bot en la llamada, sin cuenta, sin clave de API.</p>
+      <div class="cta">
+        <a class="btn" href="#guia">Empezar la guía</a>
+        <a class="btn ghost" href="https://www.skool.com/aiautomationsbyjack/crunchlog-live-meeting-co-pilot-fully-local-private-mode-for-claude-code-codex-and-agentic-os-windows-mac?p=e0359d6f" target="_blank" rel="noopener">Descargar en Skool</a>
+      </div>
+    </div>
+    <figure><img src="../assets/banner-es.jpg" alt="CrunchLog: reuniones transcritas en local"></figure>
+  </div>
+</header>
+
+<section id="oque"><div class="wrap">
+  <span class="chip">Qué es</span>
+  <h2>Un notetaker de reuniones que no manda tu audio a la nube</h2>
+  <p class="sub">Creado por Christian Landsteiner y presentado en la comunidad AI Automations by Jack (Skool). Versión probada aquí: 2.0.0a1. Esta guía y los scripts de Linux son de INEMA; el software no está en este repositorio porque la licencia de evaluación prohíbe redistribuirlo.</p>
+  <figure style="margin:0 0 26px;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000"><img src="../assets/banner-grade-es.jpg" alt="Funciones de CrunchLog: dos pistas, transcripción local, nota en Markdown, resumen, MCP y Linux" loading="lazy" style="width:100%;display:block"></figure>
+  <div class="grid g3">
+    <div class="card"><h3>🎧 Dos pistas, sin driver</h3><p>La salida de sonido (Zoom, Meet, YouTube) y el micrófono se graban por separado. Todo lo que viene del micrófono eres tú ("Me"); la IA solo tiene que separar a quienes están al otro lado. No necesita VoiceMeeter ni BlackHole.</p></div>
+    <div class="card"><h3>🔒 Transcripción local</h3><p>Parakeet TDT 0.6B v2 y separación de hablantes con sherpa-onnx, todo en la CPU. Medido aquí: 27,6× el tiempo real, es decir, una llamada de 1 hora queda lista en unos 2 minutos.</p></div>
+    <div class="card"><h3>🤖 Claude y Codex con tu suscripción</h3><p>El resumen, las decisiones, los ítems de acción y las preguntas sobre la reunión usan tu CLI de Claude Code o de Codex ya iniciada, sin API de pago. También hay servidor MCP e integración con Claude OS.</p></div>
+  </div>
+</div></section>
+
+<section id="fluxo"><div class="wrap">
+  <span class="chip">Cómo funciona</span>
+  <h2>Una tecla para encender, otra para apagar, y aparece la nota</h2>
+  <p class="sub">Cada grabación se convierte en una carpeta (el "bundle") con far.wav, mic.wav y meta.json. El pipeline local la transforma en la nota.</p>
+  <div class="flow">
+    <span>crunchlog toggle</span><span class="arr">→</span>
+    <span>far.wav + mic.wav</span><span class="arr">→</span>
+    <span>VAD + ASR por pista</span><span class="arr">→</span>
+    <span>el gate quita el eco del mic</span><span class="arr">→</span>
+    <span>separación de hablantes</span><span class="arr">→</span>
+    <span>nota Markdown</span><span class="arr">→</span>
+    <span>resumen opcional (Claude/Codex)</span>
+  </div>
+  <div class="grid g3" style="margin-top:22px">
+    <div class="card"><h3>Nota</h3><p>Queda en <code>~/CrunchLog/notes/</code>, con frontmatter, resumen, decisiones, ítems de acción, preguntas abiertas y la transcripción con <code>[mm:ss] Hablante:</code>. Funciona bien dentro de una bóveda de Obsidian.</p></div>
+    <div class="card"><h3>Privacidad</h3><p>El audio y los bundles nunca salen de tu equipo. El texto solo sale si pides un resumen o <code>ask</code>, conectas un cliente MCP o activas el modo Live (que envía el audio a AssemblyAI). Modo totalmente privado: <code>provider = "none"</code>.</p></div>
+    <div class="card"><h3>Límites</h3><p>Solo inglés en esta versión, ~700 MB de modelos que se descargan una vez, macOS 14.2+ en Apple Silicon. Todo lo que va más allá de grabar y generar la nota es experimental. En Linux, oficialmente solo corre el procesamiento; la grabación viene de nuestros scripts.</p></div>
+  </div>
+</div></section>
+
+<section id="pre"><div class="wrap">
+  <span class="chip">Requisitos</span>
+  <h2>Lo que necesitas antes</h2>
+  <p class="sub">El zip está en el post de Skool (comunidad AI Automations by Jack). uv descarga Python 3.12 por sí solo.</p>
+  <div class="grid g3">
+    <div class="card"><h3>uv</h3><p>Gestor de Python de Astral. Instálalo y abre una terminal nueva.</p><pre><span class="c"># Windows (PowerShell)</span>
+<span class="k">powershell</span> -ExecutionPolicy ByPass -c <span class="s">"irm https://astral.sh/uv/install.ps1 | iex"</span>
+<span class="c"># macOS / Linux</span>
+<span class="k">curl</span> -LsSf <span class="s">https://astral.sh/uv/install.sh</span> | sh</pre></div>
+    <div class="card"><h3>Sistema</h3><p>Windows 10/11 o macOS 14.2+ (Apple Silicon). Linux con PipeWire usando los scripts de este repositorio (probado en Ubuntu ARM64).</p><pre><span class="c"># Linux: revisa PipeWire</span>
+<span class="k">which</span> pw-record wpctl</pre></div>
+    <div class="card"><h3>Opcionales</h3><p>ffmpeg para importar mp3/mp4. Claude Code o Codex con sesión iniciada, para resumen y preguntas.</p><pre><span class="k">claude</span> --version
+<span class="k">codex</span> --version
+<span class="k">ffmpeg</span> -version</pre></div>
+  </div>
+</div></section>
+
+<section id="guia"><div class="wrap">
+  <span class="chip">Guía de uso · paso a paso</span>
+  <h2>Del zip a la primera nota en 10 minutos</h2>
+  <p class="sub">Comandos reales, probados en esta máquina. Los tiempos y números vienen de las ejecuciones del 05/10/2026.</p>
+
+  <div class="step"><div class="b">1</div><div>
+    <h3>Descarga y descomprime</h3>
+    <p>Entra al post de Skool, descarga <code>crunchlog-2.0.0a1.zip</code> y descomprímelo. El camino más fácil, recomendado por el autor, es dejar que Claude Code lo instale: abre una terminal en la carpeta, ejecuta <code>claude</code> y pega:</p>
+<pre><span class="s">I have extracted CrunchLog into this folder. Read START-HERE.md and AGENTS.md and install it for me, then run the demo so I get my first note.</span></pre>
+    <p>Sigue el <code>AGENTS.md</code> del zip, te hace cuatro preguntas (carpeta de notas, dispositivo far, micrófono, proveedor de resumen) y termina con el demo. Si prefieres hacerlo a mano, sigue los pasos de abajo.</p>
+  </div></div>
+
+  <div class="step"><div class="b">2</div><div>
+    <h3>Instala como herramienta de uv</h3>
+    <p>Dentro de la carpeta descomprimida. El <code>[mcp]</code> ya incluye el servidor MCP; usa <code>".[mcp,tray]"</code> si quieres el ícono en la bandeja.</p>
+<pre><span class="k">uv tool install</span> --python 3.12 <span class="s">".[mcp]"</span>
+<span class="k">crunchlog</span> --version   <span class="c"># crunchlog 2.0.0a1 (build 1daf268 of 2026-10-04)</span></pre>
+    <p>Si aparece <code>command not found</code>, ejecuta <code>uv tool update-shell</code> y abre otra terminal.</p>
+  </div></div>
+
+  <div class="step"><div class="b">3</div><div>
+    <h3>Configura y descarga los modelos</h3>
+    <p>Escribe la config, el glosario y la plantilla de resumen, y descarga ~700 MB de modelos (Parakeet, silero, pyannote, TitaNet). Enter acepta los valores por defecto.</p>
+<pre><span class="k">crunchlog devices</span>                  <span class="c"># números de los dispositivos far y mic</span>
+<span class="k">crunchlog setup</span>                    <span class="c"># o: --yes --provider none (sin preguntas)</span>
+<span class="k">crunchlog doctor</span>                   <span class="c"># exit 0 y ningún [fail] = puedes grabar</span></pre>
+    <p>En macOS, la primera grabación pide dos permisos para <code>crunchlog-audio</code>: Micrófono y Grabación de pantalla y audio del sistema. Sin el segundo, la pista far queda muda.</p>
+  </div></div>
+
+  <div class="step"><div class="b">4</div><div>
+    <h3>Primera nota: el demo</h3>
+    <p>La voz del equipo representa una reunión inventada con tres personas y el pipeline real procesa todo. No necesita micrófono.</p>
+<pre><span class="k">crunchlog demo</span>          <span class="c"># Windows / macOS</span>
+<span class="k">crunchlog-linux demo</span>    <span class="c"># Linux (Piper), mira la sección Linux</span>
+<span class="c"># turns: 33 turns, talk seconds per role {'Me': 53.8, 'Speaker 2': 55.5, 'Speaker 3': 29.0}</span>
+<span class="c"># done in 57 s</span>
+<span class="c"># note: ~/CrunchLog/notes/2026-10-05-1642-demo.md</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">5</div><div>
+    <h3>Graba una reunión de verdad</h3>
+    <p>Asigna <code>crunchlog toggle</code> a una tecla: PowerToys o AutoHotkey con <code>crunchlogw toggle</code> en Windows, un atajo de la app Atajos en macOS, o una acción del Stream Deck. Púlsala cuando empiece la llamada y otra vez cuando termine.</p>
+<pre><span class="k">crunchlog toggle</span>                            <span class="c"># empieza</span>
+<span class="k">crunchlog toggle</span>                            <span class="c"># se detiene y escribe la nota</span>
+<span class="k">crunchlog start</span> --slug acme --speakers 3     <span class="c"># nombre en la carpeta + total de personas (contigo)</span>
+<span class="k">crunchlog check-audio</span> --tone                <span class="c"># prueba las dos pistas antes de la 1ª llamada</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">6</div><div>
+    <h3>Importa audio o video que ya tienes</h3>
+    <p>mp3, m4a, mp4 y wav entran como pista far (sin "Me"). Lo probamos con el walkthrough de 2:26 del autor: nota lista en 18 s.</p>
+<pre><span class="k">crunchlog process</span> reunion.mp4
+<span class="k">crunchlog watch</span> ~/Grabadora                 <span class="c"># procesa todo lo que caiga en la carpeta</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">7</div><div>
+    <h3>Resumen y preguntas con Claude o Codex</h3>
+    <p>En <code>~/.config/crunchlog/config.toml</code>, cambia el proveedor. CrunchLog llama a <code>claude -p</code> (o <code>codex</code>) con herramientas y MCP desactivados, y esto sale de tu suscripción. Medido: resumen del demo en 10,3 s.</p>
+<pre><span class="c"># config.toml</span>
+[summary]
+provider = <span class="s">"claude"</span>        <span class="c"># none | claude | codex | auto</span>
+claude_model = <span class="s">"opus"</span>
+claude_effort = <span class="s">"medium"</span>
+
+<span class="k">crunchlog ask</span> latest <span class="s">"What was decided about the beta launch?"</span>
+<span class="c"># The beta starts on November 12 with 200 testers ... [01:13 Me]</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">8</div><div>
+    <h3>Ajusta la nota después</h3>
+    <p>Ponles nombre a los hablantes, agrega tus anotaciones, exporta subtítulos o abre en Obsidian.</p>
+<pre><span class="k">crunchlog speakers</span> &lt;grabación&gt; <span class="s">"Speaker 2=Dana"</span> <span class="s">"Speaker 3=Lee"</span>
+<span class="k">crunchlog note</span> <span class="s">"el cliente quiere la propuesta para el viernes"</span>
+<span class="k">crunchlog export</span> ~/CrunchLog/recordings/&lt;grabación&gt; --format srt   <span class="c"># srt|vtt|txt|json|csv|md</span>
+<span class="k">crunchlog templates</span> use standup
+<span class="k">crunchlog open</span> latest --obsidian</pre>
+  </div></div>
+
+  <div class="step"><div class="b">9</div><div>
+    <h3>Hoja de apoyo antes de la próxima reunión</h3>
+    <p>Reúne en una hoja los ítems de acción abiertos, las decisiones y las preguntas de las últimas notas de un cliente, con preguntas guía que se marcan solas cuando la próxima nota las responde. No llama a ningún modelo.</p>
+<pre><span class="k">crunchlog prep</span> <span class="s">"acme"</span> --calendar <span class="s">"Jue 14h, Ana y Bruno"</span>
+<span class="c"># ~/CrunchLog/notes/2026-10-05-acme-cheatsheet.md</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">10</div><div>
+    <h3>Dashboard en el navegador</h3>
+    <p>Grabador con medidores, forma de onda de las dos pistas, transcripción clicable, renombrar hablantes, prompts, configuración y doctor. Solo escucha en 127.0.0.1. En la primera visita, usa el enlace con <code>?t=...</code> que imprime.</p>
+<pre><span class="k">crunchlog dashboard</span>     <span class="c"># http://127.0.0.1:47431/  (--port lo cambia)</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">11</div><div>
+    <h3>MCP: pregunta por tus reuniones en Claude Code</h3>
+    <p>Después de registrarlo, pregunta "¿qué acordamos con Acme el martes?" o "empieza a grabar". Lo probamos por stdio y el servidor respondió con 15 herramientas: status, list_recordings, get_transcript, get_note, get_summary, search_notes, prep, cheatsheet, start/stop/toggle_recording, process, rename_speakers, export y doctor.</p>
+<pre><span class="k">claude mcp add</span> crunchlog -- crunchlog mcp</pre>
+    <p>Si usas el <strong>Claude OS de Jack Roberts</strong> (<a href="https://www.skool.com/aiautomationsbyjack/classroom/af686ad3?md=16da0f0bc87b4d399eadd0b1e69aabc5" target="_blank" rel="noopener">clase del Agentic OS</a>, solo para miembros), un comando registra el MCP y crea una bóveda que la página Memory sincroniza:</p>
+<pre><span class="k">crunchlog connect</span> agentic-os --dry-run    <span class="c"># muestra lo que va a hacer</span>
+<span class="k">crunchlog connect</span> agentic-os              <span class="c"># --status | --undo</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">12</div><div>
+    <h3>Modo Live (alpha, desactivado por defecto)</h3>
+    <p>Envía las dos pistas a AssemblyAI (tu cuenta, de pago) y muestra durante la llamada la hoja de apoyo marcándose, resúmenes por bloque y un "pregúntale a la reunión". La nota final sigue saliendo del pipeline local. No lo actives en llamadas confidenciales.</p>
+<pre>[live]
+enabled = <span class="k">true</span>
+provider = <span class="s">"assemblyai"</span>
+api_key = <span class="s">"..."</span>     <span class="c"># tu clave</span></pre>
+  </div></div>
+</div></section>
+
+<section id="linux"><div class="wrap">
+  <span class="chip">Linux · scripts de este repositorio</span>
+  <h2>En Linux, la grabación y el demo vienen de nuestros scripts</h2>
+  <p class="sub">La versión 2.0.0a1 solo graba en Windows y macOS. En Linux, el procesamiento corre completo (transcripción, hablantes, nota, resumen, ask, export, prep, dashboard y MCP) y las dependencias se instalaron sin parches en ARM64. Faltaban dos piezas, y escribimos las dos sin modificar el código de CrunchLog.</p>
+  <div class="grid g3">
+    <div class="card"><h3>🎚️ recorder_linux.py</h3><p>Graba con <code>pw-record</code> de PipeWire: monitor de la salida predeterminada → far.wav y entrada predeterminada → mic.wav, a 16 kHz mono, con <code>meta.json</code> según el contrato oficial (bundle v2). Al detener, llama al pipeline oficial.</p></div>
+    <div class="card"><h3>🗣️ demo_linux.py</h3><p>El mismo <code>crunchlog demo</code> (mismo guion, mismo montaje, mismo pipeline), solo cambiando la voz del sistema por Piper, que funciona sin conexión. Probado: 33 intervenciones, "Me" separado de Speaker 2 y 3, en 57 s.</p></div>
+    <div class="card"><h3>⌨️ crunchlog-linux</h3><p>Atajo con <code>demo</code>, <code>start</code>, <code>stop</code>, <code>toggle</code>, <code>status</code> y <code>devices</code>. Asigna <code>crunchlog-linux toggle</code> a un atajo de GNOME o KDE.</p></div>
+  </div>
+<pre style="margin-top:22px"><span class="c"># 1. CrunchLog (en la carpeta del zip) + modelos</span>
+<span class="k">uv tool install</span> --python 3.12 <span class="s">".[mcp]"</span>
+<span class="k">crunchlog setup</span> --yes --provider none
+
+<span class="c"># 2. extras de este repositorio: Piper + 3 voces (~190 MB) + crunchlog-linux en ~/.local/bin</span>
+<span class="k">git clone</span> <span class="s">https://github.com/inematds/crunchlog</span>
+<span class="k">bash</span> crunchlog/linux/instalar-extras-linux.sh
+
+<span class="c"># 3. usar</span>
+<span class="k">crunchlog-linux demo</span>
+<span class="k">crunchlog-linux devices</span>                   <span class="c"># far (monitor de la salida) y mic (entrada)</span>
+<span class="k">crunchlog-linux toggle</span>                    <span class="c"># empieza / se detiene + nota</span>
+CRUNCHLOG_FAR_TARGET=&lt;sink&gt; CRUNCHLOG_MIC_TARGET=&lt;source&gt; <span class="k">crunchlog-linux start</span>   <span class="c"># otras tarjetas (wpctl status)</span></pre>
+  <p class="sub" style="margin-top:16px">El <code>crunchlog doctor</code> en Linux muestra dos <code>[fail]</code> (platform y devices). Son solo de la grabación nativa, que <code>crunchlog-linux</code> reemplaza. Todo lo demás da <code>[ok]</code>. El botón Record del dashboard no funciona en Linux, pero las grabaciones hechas con el script aparecen y se reproducen con normalidad allí.</p>
+</div></section>
+
+<section id="exemplos"><div class="wrap">
+  <span class="chip">Pantallas reales</span>
+  <h2>El dashboard funcionando en esta máquina</h2>
+  <p class="sub">Capturas del 05/10/2026, con el demo (reunión inventada) y las grabaciones de prueba hechas en Linux.</p>
+  <div class="ex">
+    <figure><img src="../assets/dash-home.jpg" alt="Overview con el grabador y las últimas grabaciones" loading="lazy"><figcaption>Overview: botón Record/Stop, medidores de las pistas far y mic, últimas grabaciones, disco y modelos.</figcaption></figure>
+    <figure><img src="../assets/dash-demo.jpg" alt="Grabación del demo con las dos pistas y tres hablantes" loading="lazy"><figcaption>Grabación: forma de onda de las dos pistas, quién habla y cuándo (Me, Speaker 2, Speaker 3), reproductor y export.</figcaption></figure>
+    <figure><img src="../assets/dash-recordings.jpg" alt="Lista de grabaciones" loading="lazy"><figcaption>Recordings: el archivo de grabaciones con filtros y el estado de cada nota.</figcaption></figure>
+    <figure><img src="../assets/dash-settings.jpg" alt="Página de configuración" loading="lazy"><figcaption>Settings: carpetas, dispositivos, transcripción, hablantes, limpieza, resumen, ask y live.</figcaption></figure>
+    <figure><img src="../assets/dash-prompts.jpg" alt="Página de prompts de resumen" loading="lazy"><figcaption>Prompts: las plantillas de resumen por tipo de reunión y cuál está en uso.</figcaption></figure>
+    <figure><img src="../assets/dash-doctor.jpg" alt="Página Doctor" loading="lazy"><figcaption>Doctor: las comprobaciones del equipo y el botón de actualización.</figcaption></figure>
+  </div>
+</div></section>
+
+<section id="roadmap"><div class="wrap">
+  <span class="chip">Problemas comunes</span>
+  <h2>Cuando algo no sale como esperabas</h2>
+  <p class="sub">Del README del autor y de lo que encontramos en las pruebas.</p>
+  <div class="phase"><div class="tag">macOS</div><div class="d"><strong>Pista far muda</strong><span>Falta el permiso "Grabación de pantalla y audio del sistema" para crunchlog-audio. Concédelo y graba de nuevo. Si Gatekeeper bloquea el helper, ejecuta xattr -cr . solo en la carpeta del zip.</span></div></div>
+  <div class="phase"><div class="tag">Windows</div><div class="d"><strong>Procesar falla, grabar funciona</strong><span>El doctor muestra "bundled onnxruntime missing". Ejecuta uv tool install --python 3.12 --reinstall ".[mcp]" en la carpeta del zip, con el tray y el dashboard cerrados (si no, aparece Access is denied).</span></div></div>
+  <div class="phase"><div class="tag">Hablantes</div><div class="d"><strong>Dos personas se volvieron una</strong><span>Reprocesa indicando el total: crunchlog process &lt;carpeta&gt; --speakers N (N te cuenta a ti).</span></div></div>
+  <div class="phase"><div class="tag">Nombres</div><div class="d"><strong>Un nombre sale mal siempre igual</strong><span>Usa el glosario ~/.config/crunchlog/glossary.txt, una línea "incorrecto =&gt; correcto". En el demo, "Quillory" salió "Quillery".</span></div></div>
+  <div class="phase"><div class="tag">Linux</div><div class="d"><strong>Far o mic vacío</strong><span>Ejecuta crunchlog-linux devices. Si el sonido sale por otra tarjeta, usa CRUNCHLOG_FAR_TARGET. En una sesión remota (RDP) la entrada no tiene micrófono; usa una entrada real con CRUNCHLOG_MIC_TARGET.</span></div></div>
+  <div class="phase"><div class="tag">Actualizar</div><div class="d"><strong>Nueva versión</strong><span>Descarga el zip nuevo en la carpeta Descargas y haz clic en Update CrunchLog (bandeja) o Update now (Doctor), o ejecuta crunchlog update. La config, las grabaciones y las notas se conservan. Desinstalar: uv tool uninstall crunchlog.</span></div></div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <div class="pill">Parakeet TDT 0.6B</div><div class="pill">sherpa-onnx</div><div class="pill">uv · Python 3.12</div><div class="pill">PipeWire + Piper (Linux)</div><div class="pill">MCP</div>
+    <p style="margin-top:18px">CrunchLog © 2026 Christian Landsteiner (licencia de evaluación, no incluido aquí) · integración Claude OS © Jack Roberts · guía y scripts de Linux por INEMA ·
+      <a href="https://github.com/inematds/crunchlog">inematds/crunchlog</a> ·
+      <a href="https://inema.club">INEMA.CLUB</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var KEY='crunchlog-theme';
+    var b=document.body, t=document.getElementById('themeToggle');
+    if(localStorage.getItem(KEY)==='light'){ b.classList.add('light'); t.textContent='☀️'; }
+    t.addEventListener('click',function(){
+      var light=b.classList.toggle('light');
+      t.textContent=light?'☀️':'🌙';
+      localStorage.setItem(KEY, light?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

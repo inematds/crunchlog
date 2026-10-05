@@ -5,3 +5,4 @@ _fonte/
 *.mp4
 crunchlog-*/
 __pycache__/
+guia/assets/*.codex.log

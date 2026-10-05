@@ -1,5 +1,13 @@
 # CrunchLog: guia completo de uso (Windows, macOS e Linux)
 
+[![CrunchLog: reuniões locais](guia/assets/banner.jpg)](https://inematds.github.io/crunchlog/guia/)
+
+**🇧🇷 [Português](README.md) · 🇺🇸 [English](README.en.md) · 🇪🇸 [Español](README.es.md)**
+
+## 📖 Guia de uso
+
+Guia completo (landing + passo a passo): **https://inematds.github.io/crunchlog/guia/**
+
 **CrunchLog** grava reuniões e gera notas em Markdown **sem sair da sua máquina**. Você aperta uma tecla quando a call começa e de novo quando termina. Alguns segundos depois cai uma nota com cada fala marcada por pessoa ("Me" é você, "Speaker 2", "Speaker 3"... são os outros). Não entra bot na call, não precisa de conta nem de chave de API.
 
 - Autor: **Christian Landsteiner**. Versão testada aqui: **2.0.0a1** (build `1daf268`, 04/10/2026).
@@ -298,7 +306,7 @@ Na primeira visita de cada navegador, use o link com `?t=...` que ele imprime (�
 
 No Linux, o botão **Record** do dashboard não funciona (ele usa o gravador nativo). Grave com `crunchlog-linux`, e o dashboard mostra e toca a gravação normalmente.
 
-![Dashboard: gravação do demo com as duas faixas](guia/assets/img/dash-demo.png)
+![Dashboard: gravação do demo com as duas faixas](guia/assets/dash-demo.jpg)
 
 ## 11. Cola antes da reunião (`prep`)
 
